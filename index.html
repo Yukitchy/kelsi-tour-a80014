@@ -75,7 +75,6 @@ h2 small{display:block;font:900 13px "Noto Sans JP";letter-spacing:.3em;color:va
 .song .tag{position:absolute;left:8px;top:8px;background:#111;color:#fff;font:700 10px Inter;letter-spacing:.2em;padding:4px 8px;text-transform:uppercase}
 .song p{grid-column:1/-1;font-size:14px;color:#333;margin-top:8px}
 .song a{grid-column:1/-1;justify-self:start;font:700 12px Inter;letter-spacing:.1em;color:#111;border-bottom:2px solid var(--red);text-decoration:none;margin-top:6px}
-.later{color:var(--dim);font-size:13px;padding:0 0 18px 74px}
 /* rider / MC lines */
 .rider{margin-top:16px;border:2px solid var(--ink);padding:6px 16px}
 .rider li{list-style:none;padding:12px 0;border-bottom:1px dashed #444;display:flex;gap:12px}
@@ -163,14 +162,14 @@ footer{margin:70px 0 40px;text-align:center}
 const days=KD.cities.map((_,i)=>'NO.'+String(i+1).padStart(2,'0'));
 document.getElementById('dates').innerHTML=KD.cities.map((c,i)=>`
 <details data-city="${c.key}">
- <summary><span class="d">${days[i]}</span><span class="c">${c.en}<i>${c.ja}</i></span><span class="n">${c.count} <span class="en">SONGS</span><span class="ja">曲</span></span><span class="x"></span></summary>
- ${i===0?`<div class="citymap"></div>
- <div class="setlist"><h3>Tokyo Setlist<small>SET LIST · 東京</small></h3>
- ${KD.spots.map(s=>`<div class="song"><span class="no">${String(s.n).padStart(2,'0')}</span>
+ <summary><span class="d">${days[i]}</span><span class="c">${c.en}<i>${c.ja}</i></span><span class="n">${c.count} <span class="en">SPOTS</span><span class="ja">か所</span></span><span class="x"></span></summary>
+ <div class="citymap"></div>
+ <div class="setlist"><h3>${c.en} Setlist<small>SET LIST · ${c.ja}</small></h3>
+ ${c.spots.map(s=>`<div class="song"><span class="no">${String(s.n).padStart(2,'0')}</span>
    <div><div class="t">${s.en}</div><div class="tj">${s.ja}</div></div>
-   <div class="ph"><img src="${s.photo}" alt="" loading="lazy"><span class="tag">${s.cat}</span></div>
-   <p>${s.why}</p><a href="${KDX.maps(s.q)}" target="_blank" rel="noopener">MAP →</a></div>`).join('')}
- </div>`:`<p class="later">(mockup: Tokyo only)</p>`}
+   ${s.photo?`<div class="ph"><img src="${s.photo}" alt="" loading="lazy"><span class="tag">${s.cat}</span></div>`:''}
+   <p><span class="en">${s.why}</span><span class="ja">${s.why_ja}</span></p><a href="${KDX.maps(s.q)}" target="_blank" rel="noopener">MAP →</a></div>`).join('')}
+ </div>
 </details>`).join('');
 document.getElementById('rider').innerHTML=KD.tips.map(t=>`<li><span class="en">${t.en}</span><span class="ja">${t.ja}</span></li>`).join('');
 document.getElementById('mc').innerHTML=KD.phrases.map(p=>`<div><b>${p.jp}</b><span>${p.ro} — ${p.en}</span></div>`).join('');
@@ -182,7 +181,7 @@ document.getElementById('lineup').innerHTML=KD.tours.map(t=>`<a class="act${t.me
  <div class="who"><span class="en">${t.me?'Headliner · your teacher':'Support act · guide friend'} · ${t.host}</span><span class="ja">${t.me?'ヘッドライナー・ユウキ本人':'ガイド仲間'}・${t.host}</span></div>
  <h3>${t.t}</h3><div class="loc">${t.loc}</div><p><span class="en">${t.en}</span><span class="ja">${t.ja}</span></p>
  <span class="go"><span class="en">SEE THE TOUR →</span><span class="ja">ツアーを見る →</span></span></div></a>`).join('');
-document.getElementById('credits').innerHTML=KH.map(h=>`${h.en} — ${h.credit}`).join(' / ');
+document.getElementById('credits').innerHTML=[...KH.map(h=>`${h.en} — ${h.credit}`),...KD.cities.flatMap(c=>c.spots.filter(s=>s.credit).map(s=>`${s.en} — ${s.credit}`))].join(' / ');
 KDX.lang();
 </script>
 </body>

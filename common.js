@@ -8,6 +8,7 @@ const KDX = {
     topo: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
   },
   map(el, pts, o) {
+    pts = pts.filter(p => p.lat != null && p.lng != null);
     const m = L.map(el, { scrollWheelZoom: false, zoomControl: false, attributionControl: false });
     L.tileLayer(KDX.tiles[o.tiles || 'light'], { maxZoom: 18 }).addTo(m);
     const ll = pts.map(p => [p.lat, p.lng]);
@@ -31,7 +32,7 @@ const KDX = {
         const el = d.querySelector('.citymap');
         if (!el || el._done) return;
         el._done = true;
-        setTimeout(() => KDX.map(el, KD.spots, Object.assign({ maxZoom: 15 }, o)), 50);
+        setTimeout(() => KDX.map(el, KD.cities.find(x => x.key === d.dataset.city).spots, Object.assign({ maxZoom: 15 }, o)), 50);
       };
       d.addEventListener('toggle', () => d.open && draw());
       if (d.open) draw();
